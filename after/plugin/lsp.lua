@@ -30,7 +30,11 @@ lsp.configure('pyright', {
     settings = {
         python = {
             analysis = {
-                typeCheckingMode = 'strict'
+                typeCheckingMode = 'strict',
+                reportUnknownMemberType = 'warning',
+                reportUnknownParameterType = 'warning',
+                reportUnknownVariableType = 'warning',
+                reportUnknownArgumentType = 'warning',
             }
         }
     }
@@ -118,6 +122,7 @@ lsp.setup()
 require('null-ls').setup({
     sources = {
         require('null-ls').builtins.formatting.black,
+        require('null-ls').builtins.formatting.isort,
     },
     on_attach = lsp_format_on_attach
 })
