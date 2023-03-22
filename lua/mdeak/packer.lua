@@ -82,4 +82,9 @@ return require('packer').startup(function(use)
     }
 
     use 'mfussenegger/nvim-dap-python'
+    use { "klen/nvim-test",
+        config = function()
+            require('nvim-test').setup()
+        end
+    }
 end)
