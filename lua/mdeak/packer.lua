@@ -63,4 +63,23 @@ return require('packer').startup(function(use)
     use 'github/copilot.vim'
 
     use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
+
+    use {
+        "ThePrimeagen/refactoring.nvim",
+        requires = {
+            { "nvim-lua/plenary.nvim" },
+            { "nvim-treesitter/nvim-treesitter" },
+        }
+    }
+
+    use {
+        "mfussenegger/nvim-dap",
+        requires = {
+            "rcarriga/nvim-dap-ui",
+            "theHamsta/nvim-dap-virtual-text",
+            "Pocco81/DAPInstall.nvim",
+        }
+    }
+
+    use 'mfussenegger/nvim-dap-python'
 end)

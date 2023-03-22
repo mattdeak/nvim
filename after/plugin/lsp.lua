@@ -5,6 +5,8 @@ local lsp = require('lsp-zero').preset({
     suggest_lsp_servers = false,
 })
 
+local util = require('lspconfig.util')
+
 lsp.preset("recommended")
 
 lsp.ensure_installed({
@@ -37,7 +39,15 @@ lsp.configure('pyright', {
                 reportUnknownArgumentType = 'warning',
             }
         }
-    }
+    },
+    root_dir = function(fname)
+        local root_files = {
+            'pyproject.toml',
+            'pyrightconfig.json',
+            ".git",
+        }
+        return util.root_pattern(unpack(root_files))(fname) or lsp.util.find_git_ancestor(fname)
+    end
 })
 
 lsp.configure('rust_analyzer', {
@@ -123,6 +133,7 @@ require('null-ls').setup({
     sources = {
         require('null-ls').builtins.formatting.black,
         require('null-ls').builtins.formatting.isort,
+        require('null-ls').builtins.diagnostics.pyproject_flake8,
     },
     on_attach = lsp_format_on_attach
 })
