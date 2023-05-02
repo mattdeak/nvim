@@ -50,23 +50,11 @@ lsp.configure('pyright', {
     end
 })
 
-lsp.configure('rust_analyzer', {
-    settings = {
-        ['rust-analyzer'] = {
-            assist = {
-                importGranularity = 'module',
-                importPrefix = 'by_self'
-            },
-            cargo = {
-                loadOutDirsFromCheck = true
-            },
-            procMacro = {
-                enable = true
-            }
-        }
-    }
+local rust_lsp = lsp.build_options('rust_analyzer', {
+    checkOnSave = {
+        command = 'clippy'
+    },
 })
-
 
 
 local cmp = require('cmp')
@@ -128,6 +116,9 @@ lsp.on_attach(function(client, bufnr)
 end)
 
 lsp.setup()
+
+-- Rust tools
+require('rust-tools').setup({ server = rust_lsp })
 
 require('null-ls').setup({
     sources = {

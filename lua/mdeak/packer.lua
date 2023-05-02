@@ -87,4 +87,7 @@ return require('packer').startup(function(use)
             require('nvim-test').setup()
         end
     }
+
+    use 'simrat39/rust-tools.nvim'
+    use { "diepm/vim-rest-console", ft = "rest" }
 end)
