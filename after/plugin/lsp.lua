@@ -16,6 +16,15 @@ lsp.ensure_installed({
     'pyright',
 })
 
+lsp.configure('ts_server', {
+    settings = {
+        typescript = {
+            -- Disable tsserver formatting, use null-ls instead
+            format = nil
+        }
+    }
+})
+
 
 -- Fix Undefined global 'vim'
 lsp.configure('lua_ls', {
@@ -50,11 +59,7 @@ lsp.configure('pyright', {
     end
 })
 
-local rust_lsp = lsp.build_options('rust_analyzer', {
-    checkOnSave = {
-        command = 'clippy'
-    },
-})
+lsp.skip_server_setup("rust_analyzer")
 
 
 local cmp = require('cmp')
@@ -98,7 +103,8 @@ local lsp_format_on_attach = function(client, bufnr)
     end
 end
 
-lsp.on_attach(function(client, bufnr)
+
+local lsp_remap_on_attach = function(client, bufnr)
     local opts = { buffer = bufnr, remap = false }
 
     vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, opts)
@@ -111,20 +117,44 @@ lsp.on_attach(function(client, bufnr)
     vim.keymap.set("n", "<leader>vrr", function() vim.lsp.buf.references() end, opts)
     vim.keymap.set("n", "<leader>vrn", function() vim.lsp.buf.rename() end, opts)
     vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
+end
 
+local lsp_on_attach = function(client, bufnr)
+    lsp_remap_on_attach(client, bufnr)
     lsp_format_on_attach(client, bufnr)
-end)
+end
+
+lsp.on_attach(lsp_on_attach)
 
 lsp.setup()
 
 -- Rust tools
-require('rust-tools').setup({ server = rust_lsp })
+
+require('rust-tools').setup({
+    server = {
+        on_attach = lsp_on_attach,
+        settings = {
+            ["rust-analyzer"] = {
+                checkOnSave = {
+                    command = "clippy"
+                },
+                -- Stop rust-analyzer from linting unused features
+                -- TODO: should this be a toggle?
+                cargo = {
+                    allFeatures = true
+                },
+            }
+        }
+    }
+})
 
 require('null-ls').setup({
     sources = {
         require('null-ls').builtins.formatting.black,
         require('null-ls').builtins.formatting.isort,
         require('null-ls').builtins.diagnostics.pyproject_flake8,
+        require('null-ls').builtins.diagnostics.jsonlint,
+        require('null-ls').builtins.diagnostics.prettier,
     },
     on_attach = lsp_format_on_attach
 })
