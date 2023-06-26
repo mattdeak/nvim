@@ -139,7 +139,7 @@ require('rust-tools').setup({
                     command = "clippy"
                 },
                 -- Stop rust-analyzer from linting unused features
-                -- TODO: should this be a toggle?
+                -- TODO: should this be a toggle? Is that possible?
                 cargo = {
                     allFeatures = true
                 },
