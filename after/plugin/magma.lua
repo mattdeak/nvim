@@ -1,0 +1,6 @@
+vim.keymap.set("n", "<leader>m", ":MagmaEvaluateOperator<CR>")
+vim.keymap.set("n", "<leader>ml", ":MagmaEvaluateLine<CR>")
+vim.keymap.set("v", "<leader>m", "<C-u>:MagmaEvaluateVisual<CR>")
+vim.keymap.set("n", "<leader>mc", ":MagmaReevaluateCell<CR>")
+vim.keymap.set("n", "<leader>md", ":MagmaDelete<CR>")
+vim.keymap.set("n", "<leader>mo", ":MagmaShowOutput<CR>")

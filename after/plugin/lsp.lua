@@ -53,6 +53,7 @@ lsp.configure('pyright', {
         local root_files = {
             'pyproject.toml',
             'pyrightconfig.json',
+            'setup.py',
             ".git",
         }
         return util.root_pattern(unpack(root_files))(fname) or lsp.util.find_git_ancestor(fname)
@@ -97,7 +98,7 @@ local lsp_format_on_attach = function(client, bufnr)
             buffer = bufnr,
             callback = function()
                 -- on 0.8, you should use vim.lsp.buf.format({ bufnr = bufnr }) instead
-                vim.lsp.buf.formatting_sync()
+                vim.lsp.buf.format({ bufnr = bufnr })
             end,
         })
     end
@@ -154,9 +155,9 @@ require('null-ls').setup({
         require('null-ls').builtins.formatting.isort,
         require('null-ls').builtins.diagnostics.pyproject_flake8,
         require('null-ls').builtins.diagnostics.jsonlint,
-        require('null-ls').builtins.diagnostics.prettier,
+        require('null-ls').builtins.diagnostics.prettierd,
     },
-    on_attach = lsp_format_on_attach
+    on_attach = lsp_format_on_attach,
 })
 
 vim.diagnostic.config({

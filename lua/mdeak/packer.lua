@@ -92,4 +92,5 @@ return require('packer').startup(function(use)
 
     use 'simrat39/rust-tools.nvim'
     use { "diepm/vim-rest-console", ft = "rest" }
+    use "luk400/vim-jukit"
 end)
